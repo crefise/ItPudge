@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
@@ -17,6 +18,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 |
 */
 
+
+////////////////////////////// AUTH //////////////////////////////
 // POST - /api/auth/register
 Route::post('/register', function(Request $request) {
     $data = $request->all();
@@ -40,24 +43,32 @@ Route::post('/logout', function(Request $request) {
 
 //POST - /api/auth/password-reset
 //POST - /api/auth/password-reset/<confirm_token>
+//////////////////////////////////////////////////////////////////
 
-//GET - /api/users 
-Route::get('/users', [ UserController::class, 'index']);
 
-//GET - /api/users/<user_id>
-Route::get('/users/{User}', [ UserController::class, 'show']);
 
-//POST - /api/users- create a new user, required parameters are [login, password,password confirmation, email, role]. This feature must be accessible only foradmins
+////////////////////////////// ADMIN //////////////////////////////
+Route::middleware('auth')->get('/users', [ UserController::class, 'index']);
 Route::middleware('auth')->post('/users', [UserController::class, 'create_user']);
+Route::middleware('auth')->patch('/users/{User}',[UserController::class, 'update']);
+Route::middleware('auth')->delete('/users/{User}',[UserController::class, 'destroy']);
+///////////////////////////////////////////////////////////////////
 
-//POST - /api/users/avatar
-
-//PATCH - /api/users/<user_id>
-Route::patch('/users/{User}',[UserController::class, 'update']);
-
-//DELETE - /api/users/<user_id>
-Route::delete('/users/{User}',[UserController::class, 'destroy']);
+////////////////////////////// USER ///////////////////////////////
+Route::middleware('auth')->post('/users/avatar', [UserController::class, 'upload_avatar']);
 
 Route::middleware('auth')->get('/me', function () {
     return auth()->user();
 });
+/////////////////////////////////////////////////////////////////////
+Route::get('/users/{User}', [ UserController::class, 'show']);
+////////////////////////////// MEMBER ///////////////////////////////
+
+
+
+Route::post('/posts/create', [PostController::class, 'create']);
+
+
+
+
+
