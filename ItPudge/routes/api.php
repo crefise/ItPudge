@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,54 +19,42 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 */
 
 
-////////////////////////////// AUTH //////////////////////////////
-// POST - /api/auth/register
-Route::post('/register', function(Request $request) {
-    $data = $request->all();
-    $data['password'] = Hash::make($data['password']);
-    App\Models\User::create($data);
-});
 
 
-// POST - /api/auth/login
-Route::post('/login', function(Request $request) {
-   $credentails = request()->only(['email', 'password']);
-    $token = auth()->attempt($credentails);
-    return $token;
-});
-
-//POST - /api/auth/logout
-Route::post('/logout', function(Request $request) {
-        JWTAuth::invalidate(JWTAuth::getToken());
-        return "Logout good!";
- });
-
-//POST - /api/auth/password-reset
-//POST - /api/auth/password-reset/<confirm_token>
-//////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////// ADMIN //////////////////////////////
+////////////////////////////// USER //////////////////////////////
+Route::post('/register', [ UserController::class, 'register']);
+Route::post('/login', [ UserController::class, 'login']);
+Route::middleware('auth')->post('/logout', [ UserController::class, 'logout']);
 Route::middleware('auth')->get('/users', [ UserController::class, 'index']);
+Route::get('/users/{User}', [ UserController::class, 'show']);
 Route::middleware('auth')->post('/users', [UserController::class, 'create_user']);
+Route::middleware('auth')->post('/users/avatar', [UserController::class, 'upload_avatar']);
 Route::middleware('auth')->patch('/users/{User}',[UserController::class, 'update']);
 Route::middleware('auth')->delete('/users/{User}',[UserController::class, 'destroy']);
+Route::middleware('auth')->delete('/me',[UserController::class, 'me']);
 ///////////////////////////////////////////////////////////////////
 
-////////////////////////////// USER ///////////////////////////////
-Route::middleware('auth')->post('/users/avatar', [UserController::class, 'upload_avatar']);
 
-Route::middleware('auth')->get('/me', function () {
-    return auth()->user();
-});
+////////////////////////////// POST /////////////////////////////////
+Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts/{post}', [PostController::class, 'show']);
+Route::middleware('auth')->post('/posts', [PostController::class, 'create']);
+Route::middleware('auth')->patch('/posts/{post}', [PostController::class, 'update']);
+Route::middleware('auth')->delete('/posts/{post}', [PostController::class, 'delete']);
 /////////////////////////////////////////////////////////////////////
-Route::get('/users/{User}', [ UserController::class, 'show']);
-////////////////////////////// MEMBER ///////////////////////////////
 
 
 
-Route::post('/posts/create', [PostController::class, 'create']);
+////////////////////////////// COMMENTS ///////////////////////////////
+Route::middleware('auth')->post('/posts/{post}/comments', [CommentController::class, 'create_commment']);
+Route::middleware('auth')->get('/posts/{post}/comments', [CommentController::class, 'get_comments']);
+///////////////////////////////////////////////////////////////////////
+
+////////////////////////////// LIKE ///////////////////////////////////
+Route::middleware('auth')->post('/posts/{post}/like', [LikeController::class, 'create']);
+Route::middleware('auth')->delete('/posts/{post}/like', [LikeController::class, 'delete']);
+Route::get('/posts/{post}/like', [LikeController::class, 'get_likes']);
+///////////////////////////////////////////////////////////////////////
 
 
 

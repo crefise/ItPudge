@@ -4,13 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
 
+    public function register(Request $request) {
+        $data = $request->all();
+        $data['password'] = Hash::make($data['password']);
+        $user = User::create($data);
+        return $user;
+    }
+    public function login(Request $request) {
+        $credentails = request()->only(['email', 'password']);
+        $token = auth()->attempt($credentails);
+        return $token;
+    }
+    public function logout(Request $request) {
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return "logout okay";
+    }
 
-    ////////////////////////////////////// ADMIN //////////////////////////////////////////  
+
+
     public function create_user(Request $request) { // create user/admin
         if ($this->isAdmin()) {
             return User::create($request->all());
@@ -45,7 +62,10 @@ class UserController extends Controller
             return "User is not admin";
         }
     }
-    /////////////////////////////////////////////////////////////////////////////////////// 
+
+    public function me(Request $request) {
+        return auth()->user();
+    }
 
 
 
