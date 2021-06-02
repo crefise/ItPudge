@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Facade\FlareClient\Stacktrace\Stacktrace;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -17,8 +18,9 @@ class UserController extends Controller
         return $user;
     }
     public function login(Request $request) {
-        $credentails = request()->only(['email', 'password']);
+        $credentails = $request->only(['email', 'password']);
         $token = auth()->attempt($credentails);
+
         return $token;
     }
     public function logout(Request $request) {
@@ -73,7 +75,7 @@ class UserController extends Controller
         return User::find($id);
     }
 
-    public function isAdmin() {
+    public static function isAdmin() {
         $user = auth()->user();
         if ($user['admin_status'] == 1) {
             return true;

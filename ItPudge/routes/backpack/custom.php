@@ -21,4 +21,5 @@ Route::group([
     Route::crud('comments_entries', 'Comments_entriesCrudController');
     Route::crud('comment', 'CommentCrudController');
     Route::crud('category', 'CategoryCrudController');
+    Route::crud('like_comment', 'Like_commentCrudController');
 }); // this should be the absolute last line of this file

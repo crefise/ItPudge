@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Category_entry;
+use App\Models\Category;
 
 
 class PostController extends Controller
@@ -15,9 +17,27 @@ class PostController extends Controller
         $author_id = auth()->user()->getKey();
 
         $categories = $data['categories'];
-        return Post::create([ 'label' => $label,
+
+        $categories_array = explode(',', $categories);
+
+        $post = Post::create([ 'label' => $label,
                         'text' => $text,
                         'user_id' => $author_id]);
+
+    
+        foreach ($categories_array as $key) {
+            if ($key == "") {
+                continue;
+            } else {
+                $category_id = Category::where('name', '=', $key)->get()[0]['id'];
+                Category_entry::create([
+                    'post_id' => $post['id'],
+                    'category_id' => $category_id
+                ]);
+            }
+        }
+
+        return $post;
         
     }
     public function index(Request $request) {
