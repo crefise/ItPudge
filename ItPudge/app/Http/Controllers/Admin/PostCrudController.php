@@ -42,6 +42,7 @@ class PostCrudController extends CrudController
         CRUD::column('label');
         CRUD::column('text');
         CRUD::column('user_id');
+        CRUD::column('status');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -63,6 +64,7 @@ class PostCrudController extends CrudController
         CRUD::field('label');
         CRUD::field('text');
         CRUD::field('user_id');
+        CRUD::field('status');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

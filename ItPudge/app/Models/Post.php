@@ -13,6 +13,7 @@ class Post extends Model
     protected $fillable = [
         'label',
         'text',
-        'user_id'
+        'user_id',
+        'status'
     ];
 }

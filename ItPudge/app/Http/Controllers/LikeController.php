@@ -11,8 +11,10 @@ class LikeController extends Controller
     public function create(Request $request, $id) {
         $user_id = auth()->user()->getKey();
         $post_id = $id;
+        $type = $request->only(['type'])['type'];
         return Like::create(['user_id' => $user_id,
-                            'post_id' => $post_id]);
+                            'post_id' => $post_id,
+                            'type' => $type]);
     }
 
     public function get_likes(Request $request, $id) {

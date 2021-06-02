@@ -21,6 +21,8 @@ class CreateLikeCommentsTable extends Migration
             $table->unsignedBigInteger('comment_id');
             $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
             $table->timestamps();
+
+            $table->enum('type', ['like', 'dislike']);
         });
     }
 

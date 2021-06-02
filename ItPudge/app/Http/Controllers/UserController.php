@@ -4,13 +4,37 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Facade\FlareClient\Stacktrace\Stacktrace;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use  Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+    public function reset_password(Request $request) {
+        $token = Str::random(10);
+        $user = User::where('email', '=', $request->only(['email']));
+        $user->update(['remember_token' => $token]);
+        $user = $user->first();
+        $data = [
+            'email' => $user->email, 
+            'data' => 'Password reminder',
+            'token' => $token
+        ];
+        Mail::send('mail', $data, function ($messages)  use ($user){
+            $messages->to($user->email);
+            $messages->subject('Password reminder');
+        });
+        return 1;
+    }
 
+    public function change_password(Request $request, $token) {
+        $user = User::where("remember_token", '=', $token);
+        $pass = $request->all()['password'];
+        $user->update(['password' => Hash::make($pass),
+                        'remember_token' => NULL]);
+
+    }
     public function register(Request $request) {
         $data = $request->all();
         $data['password'] = Hash::make($data['password']);

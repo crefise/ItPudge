@@ -13,5 +13,6 @@ class Like_comment extends Model
     protected $fillable = [
         'user_id',
         'comment_id',
+        'type'
     ];
 }

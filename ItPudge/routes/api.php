@@ -21,12 +21,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
-
+Route::post('/auth/password-reset', [ UserController::class, 'reset_password']);
+Route::post('/auth/password-reset/{token}', [ UserController::class, 'change_password']);
 ////////////////////////////// USER //////////////////////////////
-Route::post('/register', [ UserController::class, 'register']);
-Route::post('/login', [ UserController::class, 'login']);
-Route::middleware('auth')->post('/logout', [ UserController::class, 'logout']);
+Route::post('/auth/register', [ UserController::class, 'register']);
+Route::post('/auth/login', [ UserController::class, 'login']);
+Route::middleware('auth')->post('/auth/logout', [ UserController::class, 'logout']);
 Route::middleware('auth')->get('/users', [ UserController::class, 'index']);
 Route::get('/users/{User}', [ UserController::class, 'show']);
 Route::middleware('auth')->post('/users', [UserController::class, 'create_user']);

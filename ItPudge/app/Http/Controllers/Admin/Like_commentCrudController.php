@@ -41,6 +41,7 @@ class Like_commentCrudController extends CrudController
     {
         CRUD::column('user_id');
         CRUD::column('comment_id');
+        CRUD::column('type');
 
         /**
          * Columns can be defined using the fluent syntax or array syntax:
@@ -61,6 +62,7 @@ class Like_commentCrudController extends CrudController
 
         CRUD::field('user_id');
         CRUD::field('comment_id');
+        CRUD::field('type');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

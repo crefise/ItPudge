@@ -8,3 +8,5 @@
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('comment') }}'><i class='nav-icon la la-question'></i> Comments</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('category') }}'><i class='nav-icon la la-question'></i> Categories</a></li>
 <li class='nav-item'><a class='nav-link' href='{{ backpack_url('like_comment') }}'><i class='nav-icon la la-question'></i> Like_comments</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('comment_entries') }}'><i class='nav-icon la la-question'></i> Comment_entries</a></li>
+<li class='nav-item'><a class='nav-link' href='{{ backpack_url('category_entry') }}'><i class='nav-icon la la-question'></i> Category_entries</a></li>
